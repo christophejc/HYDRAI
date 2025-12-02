@@ -1,5 +1,9 @@
 # Hydr.AI Backend
 
+CURRENT GOOGLE CLOUD LINK
+```
+https://hydr-ai-backend-529883695650.us-central1.run.app
+```
 This backend handles sensor data collection, weather integration, and hydration prediction using a pre-trained machine learning model.
 
 ---
@@ -47,3 +51,49 @@ This will send dummy data
 ```powershell
 curl.exe http://127.0.0.1:8000/recommendation
 ```
+
+
+
+````markdown
+## Updating the Hydr.AI Backend on Google Cloud Run
+
+After making changes to your local `backend` code, follow these steps to update the deployed Cloud Run service:
+
+1. **Test locally (optional but recommended)**  
+   From the `backend` folder:
+   ```bash
+   uvicorn app.main:app --reload
+````
+
+Verify everything works locally.
+
+2. **Rebuild the container image**
+
+   ```bash
+   gcloud builds submit --tag gcr.io/<YOUR_PROJECT_ID>/hydr-ai-backend
+   ```
+
+   Replace `<YOUR_PROJECT_ID>` with your Google Cloud project ID.
+
+3. **Redeploy to the same Cloud Run service**
+
+   ```bash
+   gcloud run deploy hydr-ai-backend \
+       --image gcr.io/<YOUR_PROJECT_ID>/hydr-ai-backend \
+       --platform managed \
+       --region us-central1 \
+       --allow-unauthenticated
+   ```
+
+   * Keep the service name (`hydr-ai-backend`) the same so your URL does **not** change.
+
+4. **Test the deployed service**
+   Use your existing Cloud Run URL:
+
+   ```bash
+   curl.exe -X POST "https://hydr-ai-backend-xxxx-uc.a.run.app/sensor" -H "Content-Type: application/json" -d "{}"
+   curl.exe "https://hydr-ai-backend-xxxx-uc.a.run.app/recommendation"
+   ```
+
+```
+
