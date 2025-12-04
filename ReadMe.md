@@ -8,6 +8,20 @@ This backend handles sensor data collection, weather integration, and hydration 
 
 ---
 
+CURL COMMAND (Replace @data.json with your file)
+
+IF JSON IS A FILE:
+```
+ curl -X 'POST'   'https://hydr-ai-backend-529883695650.us-central1.run.app/sensor'   -H 'accept: application/json'   -H 'Content-Type: application/json'   -d @data.json
+```
+IF JUST JSON:
+```
+ curl -X 'POST'   'https://hydr-ai-backend-529883695650.us-central1.run.app/sensor'   -H 'accept: application/json'   -H 'Content-Type: application/json'   -d '{
+  "hr": 78, "temp": 36.8, "gsr": 0.5, "lat": 40.7128, "lon": -74.0060
+}'
+```
+---
+
 ## Requirements
 
 - Python 3.11+
