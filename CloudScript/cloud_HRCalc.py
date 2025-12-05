@@ -3,11 +3,15 @@ import numpy as np
 from scipy.signal import find_peaks
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socket
-import requests # pip install requests
+import requests 
+import csv 
+import os 
+from datetime import datetime 
 
 # --- CONFIGURATION ---
-HOST_NAME = "0.0.0.0"  
+HOST_NAME = "0.0.0.0"   
 PORT_NUMBER = 5000     
+CSV_FILENAME = "sensor_log.csv" 
 
 # External Cloud Endpoint
 EXTERNAL_CLOUD_URL = "https://hydr-ai-backend-529883695650.us-central1.run.app/sensor"
@@ -15,7 +19,7 @@ EXTERNAL_CLOUD_URL = "https://hydr-ai-backend-529883695650.us-central1.run.app/s
 # --- CONSTANTS FOR CALCULATIONS ---
 VOLTS_PER_BIT = 4.096 / 32767.0
 V_SOURCE = 3.3      
-R_FIXED = 1000.0   # 1k Resistor
+R_FIXED = 1000.0   
 SERIAL_CALIBRATION = 12324 
 
 # Standard 10K 3950 NTC Lookup Table
@@ -76,6 +80,40 @@ def calculate_accurate_bpm(raw_data, fs):
     bpm = 60.0 / (avg_distance / fs)
     return bpm, len(peaks)
 
+# --- CSV LOGGING FUNCTION ---
+def log_to_csv(data_dict):
+    """
+    Appends data to CSV in the specific format:
+    timestamp, gsr_raw, temp_raw, hr_raw, steps, active_calories, label
+    """
+    try:
+        file_exists = os.path.isfile(CSV_FILENAME)
+        
+        with open(CSV_FILENAME, mode='a', newline='') as file:
+            # Define exact headers requested
+            fieldnames = [
+                'timestamp', 
+                'gsr_raw', 
+                'temp_raw', 
+                'hr_raw', 
+                'steps', 
+                'active_calories', 
+                'label'
+            ]
+            
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            
+            # Write header if file is new
+            if not file_exists:
+                writer.writeheader()
+            
+            # Write data
+            writer.writerow(data_dict)
+            print(f"   [CSV] Row added to {CSV_FILENAME}")
+            
+    except Exception as e:
+        print(f"   [CSV] Error saving to file: {e}")
+
 def forward_to_cloud(payload):
     """
     Sends the processed JSON to the external Google Cloud Run endpoint.
@@ -83,15 +121,12 @@ def forward_to_cloud(payload):
     try:
         print(f"   [CLOUD] Forwarding data to {EXTERNAL_CLOUD_URL}...")
         
-        # Headers specifically for your curl request
         headers = {
             'accept': 'application/json',
             'Content-Type': 'application/json'
         }
         
-        # Requests.post automatically handles JSON serialization
         response = requests.post(EXTERNAL_CLOUD_URL, json=payload, headers=headers)
-        
         print(f"   [CLOUD] Status: {response.status_code}, Response: {response.text}")
         
     except Exception as e:
@@ -107,6 +142,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             if self.path == '/process_data':
                 print("\n[DATA PACKET RECEIVED]")
                 
+                # Extract Inputs
                 ir_readings = json_data.get('ir_readings', [])
                 raw_temp = json_data.get('raw_temp', 0)
                 raw_gsr = json_data.get('raw_gsr', 0)
@@ -122,22 +158,33 @@ class RequestHandler(BaseHTTPRequestHandler):
                 print(f"   Input: {len(ir_readings)} IR samples, Raw Temp: {raw_temp}, Raw GSR: {raw_gsr}")
                 print(f"   Calculated -> BPM: {bpm:.1f}, Temp: {temp_c}C, GSR: {gsr_ohms} Ohms")
                 
-                # 1. Prepare Final JSON
-                # Matching the keys from your image: 'hr', 'temp', 'gsr', 'lat', 'lon'
+                # 1. Forward to External Cloud (Original JSON)
+                forward_to_cloud(json_data)
+                
+                # 2. Prepare Data for Local CSV Log
+                # Mapping strictly to your requested columns
+                csv_payload = {
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "gsr_raw": raw_gsr,           # Using the RAW ADC value
+                    "temp_raw": raw_temp,         # Using the RAW ADC value
+                    "hr_raw": round(bpm, 2),      # Using calculated BPM
+                    "steps": "",                  # Empty
+                    "active_calories": "",        # Empty
+                    "label": ""                   # Empty
+                }
+                
+                # 3. Save to CSV
+                log_to_csv(csv_payload)
+                
+                # 4. Respond to ESP32
                 final_packet = {
                     "hr": round(bpm, 2),
                     "temp": temp_c,
                     "gsr": gsr_ohms, 
                     "lat": lat, 
-                    "lon": lon
+                    "lon": lon,
+                    "status": "success"
                 }
-                
-                # 2. Forward to External Cloud
-                forward_to_cloud(json_data)
-                
-                # 3. Respond to ESP32 (Success)
-                # We send the same packet back so ESP32 knows what was calculated
-                final_packet["status"] = "success"
                 self.send_json(200, final_packet)
 
             else:
@@ -160,8 +207,7 @@ if __name__ == '__main__':
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     print(f"Server started on {HOST_NAME}:{PORT_NUMBER}")
-    print(f"Endpoint: http://{local_ip}:{PORT_NUMBER}/process_data")
-    print(f"Forwarding to: {EXTERNAL_CLOUD_URL}")
+    print(f"Logging data to: {os.path.abspath(CSV_FILENAME)}")
     
     server = HTTPServer((HOST_NAME, PORT_NUMBER), RequestHandler)
     try:
