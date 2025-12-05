@@ -8,7 +8,7 @@ Base.metadata.create_all(bind=engine)
 # Initialize FastAPI app
 app = FastAPI(
     title="Hydr.AI Backend",
-    description="Backend for ESP32 hydration wearable + dummy data",
+    description="Backend for ESP32 hydration wearable and Apple Health integration",
     version="1.0.0"
 )
 

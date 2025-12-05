@@ -11,5 +11,13 @@ class SensorData(Base):
     gsr = Column(Float)
     lat = Column(Float)       
     lon = Column(Float)       
-    steps = Column(Integer)       
+    #steps = Column(Integer)       
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+class AppleHealthData(Base):
+    __tablename__ = "apple_health"
+
+    id = Column(Integer, primary_key=True, index=True)
+    step_count = Column(Integer)
+    active_energy = Column(Float)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
