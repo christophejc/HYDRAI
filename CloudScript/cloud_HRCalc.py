@@ -5,12 +5,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import socket
 import requests # pip install requests
 
+# --- CONFIGURATION ---
 HOST_NAME = "0.0.0.0"  
 PORT_NUMBER = 5000     
 
+# External Cloud Endpoint
 EXTERNAL_CLOUD_URL = "https://hydr-ai-backend-529883695650.us-central1.run.app/sensor"
 
-
+# --- CONSTANTS FOR CALCULATIONS ---
 VOLTS_PER_BIT = 4.096 / 32767.0
 V_SOURCE = 3.3      
 R_FIXED = 1000.0   # 1k Resistor
@@ -75,6 +77,9 @@ def calculate_accurate_bpm(raw_data, fs):
     return bpm, len(peaks)
 
 def forward_to_cloud(payload):
+    """
+    Sends the processed JSON to the external Google Cloud Run endpoint.
+    """
     try:
         print(f"   [CLOUD] Forwarding data to {EXTERNAL_CLOUD_URL}...")
         
@@ -128,7 +133,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 }
                 
                 # 2. Forward to External Cloud
-                forward_to_cloud(final_packet)
+                forward_to_cloud(json_data)
                 
                 # 3. Respond to ESP32 (Success)
                 # We send the same packet back so ESP32 knows what was calculated
