@@ -165,12 +165,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 # Mapping strictly to your requested columns
                 csv_payload = {
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "gsr_raw": raw_gsr,           # Using the RAW ADC value
-                    "temp_raw": raw_temp,         # Using the RAW ADC value
+                    "gsr_raw": gsr_ohms,           # Using the RAW ADC value
+                    "temp_raw": temp_c,         # Using the RAW ADC value
                     "hr_raw": round(bpm, 2),      # Using calculated BPM
-                    "steps": "",                  # Empty
-                    "active_calories": "",        # Empty
-                    "label": ""                   # Empty
+                    "steps": 686,                  # Empty
+                    "active_calories": 10242,        # Empty
+                    "label": "mildly dehydrated"                   # Empty
                 }
                 
                 # 3. Save to CSV
