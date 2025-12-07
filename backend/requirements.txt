@@ -7,3 +7,8 @@ sqlalchemy
 python-dotenv
 joblib
 scikit-learn
+torchaudio
+timm
+pandas
+numpy
+torch

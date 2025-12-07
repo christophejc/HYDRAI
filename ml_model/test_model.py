@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import torch.nn as nn
-from classifier_head import HydrationClassifier
+from ..backend.app.classifier_head import HydrationClassifier
 
 
 # load test embeddings 

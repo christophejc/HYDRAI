@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from scipy.signal import find_peaks
 
 VOLTS_PER_BIT = 4.096 / 32767.0
@@ -66,3 +67,30 @@ def calculate_accurate_bpm(raw_data, fs):
     avg_distance = np.mean(np.diff(peaks))
     bpm = 60.0 / (avg_distance / fs)
     return round(bpm, 2)
+
+
+# Assume SensorData is defined and includes: gsr, temperature, heart_rate, timestamp
+# Define the interpolation function logic as a helper function
+def interpolate_sensor_data(sensor_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Resamples data to 20ms and performs linear interpolation on numeric columns.
+    This logic is extracted from your original process_sensor_log function.
+    """
+    # Set the timestamp as the index for resampling
+    sensor_df = sensor_df.set_index('timestamp')
+
+    # Identify numeric columns for linear interpolation (matching your original list)
+    # We rename them here to match the DB column names used in the route:
+    numeric_cols = ['gsr', 'temperature', 'heart_rate']
+    numeric_cols = [c for c in numeric_cols if c in sensor_df.columns]
+
+    # Resample to 20ms and interpolate numeric values linearly
+    df_resampled = sensor_df[numeric_cols].resample('20ms').mean()
+    df_interpolated = df_resampled.interpolate(method='linear')
+    
+    # Handle the 'label' column with forward fill (ffill), if present
+    if 'label' in sensor_df.columns:
+        df_label = sensor_df[['label']].resample('20ms').ffill()
+        df_interpolated['label'] = df_label['label']
+
+    return df_interpolated.reset_index()

@@ -2,9 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+from pathlib import Path
 
 from NormWear.main_model import NormWearModel
-from classifier_head import HydrationClassifier
+from .classifier_head import HydrationClassifier
 
 WINDOW = 150                    # expected time steps
 SAMPLING_RATE = 50             # Hz
@@ -14,20 +15,21 @@ LABELS = {
     1: "hydrated",
     2: "mildly_dehydrated"
 }
+CURRENT_DIR = Path(__file__).parent
 
-MODEL_PATH = "hydration_best_model.pth"
-ENCODER_WEIGHTS = "normwear_last_checkpoint-15470-correct.pth"
+MODEL_PATH = CURRENT_DIR / "hydration_best_model.pth"
+ENCODER_WEIGHTS = CURRENT_DIR / "normwear_last_checkpoint-15470-correct.pth"
 
 device = torch.device("cpu")
 
 encoder = NormWearModel(
-    weight_path=ENCODER_WEIGHTS,
+    weight_path=ENCODER_WEIGHTS.as_posix(),
     optimized_cwt=True
 ).to(device)
 encoder.eval()
 encoder.requires_grad_(False)
 
-
+ 
 ckpt = torch.load(MODEL_PATH, map_location=device)
 
 model = HydrationClassifier(

@@ -168,9 +168,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                     "gsr_raw": gsr_ohms,           # Using the RAW ADC value
                     "temp_raw": temp_c,         # Using the RAW ADC value
                     "hr_raw": round(bpm, 2),      # Using calculated BPM
-                    "steps": 686,                  # Empty
-                    "active_calories": 10242,        # Empty
-                    "label": "mildly dehydrated"                   # Empty
+                    "steps": 39,                  # Empty
+                    "active_calories": 0,        # Empty
+                    "label": "dehydrated-morning"                   # Empty
                 }
                 
                 # 3. Save to CSV
@@ -206,7 +206,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
-    print(f"Server started on {HOST_NAME}:{PORT_NUMBER}")
+    print(f"Server started on {local_ip}:{PORT_NUMBER}")
     print(f"Logging data to: {os.path.abspath(CSV_FILENAME)}")
     
     server = HTTPServer((HOST_NAME, PORT_NUMBER), RequestHandler)
