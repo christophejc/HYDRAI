@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from .database import SessionLocal
 from .models import SensorData, AppleHealthData
 from .preprocessor import calculate_accurate_bpm, calculate_temp_c_from_raw, calculate_gsr_resistance_from_raw, interpolate_sensor_data
+from .llm_generator import generate_llm_response
+from .notifications import send_notification
 
 router = APIRouter()
 
@@ -209,10 +211,52 @@ def recommendation(db: Session = Depends(get_db)):
 
     print("Latest Apple Health - Calories:", calories, "Steps:", step_count)
 
+    
+    latest = db.query(SensorData).order_by(SensorData.id.desc()).first()
+    if not latest:
+        return {"error": "No sensor data available"}
+
+    lat = latest.lat or 40.7
+    lon = latest.lon or -74.0
+
+    # Fetch weather
+    weather = get_weather(lat=lat, lon=lon)
+
+    # 3. Generate LLM Personalized Response
+    llm_advice = generate_llm_response(
+        label,
+        step_count,
+        calories,
+        weather
+    )
+    
+    # 4. Send Notification via ntfy.sh
+    
+    # Determine priority based on risk
+    priority = 5 if label == "dehydrated" else 3 
+    tags = "🚨" if label == "dehydrated" else "💧"
+
+    send_notification(
+        title=f"HYDR-AI Alert: {label.upper()}",
+        message=llm_advice,
+        priority=priority,
+        tags=tags
+    )
+
+    # 5. Return LLM Advice in the API Response
+    return {
+        "hydration_prediction": label,
+        "personalized_advice": llm_advice,
+        "weather": weather
+    }
+
+    humidity = weather.get("main", {}).get("humidity", 50)
+    outside_temp = weather.get("main", {}).get("temp", 20)
+
     return {
         "hydration_prediction": label
     }
-    
+
     """
     ##FOR OLD MODEL USING ALL DATA
     latest = db.query(SensorData).order_by(SensorData.id.desc()).first()
@@ -220,14 +264,7 @@ def recommendation(db: Session = Depends(get_db)):
         return {"error": "No sensor data available"}
     
     # Use sensor lat/lon or default NYC
-    lat = latest.lat or 40.7
-    lon = latest.lon or -74.0
-
-    # Fetch weather
-    weather = get_weather(lat=lat, lon=lon)
-
-    humidity = weather.get("main", {}).get("humidity", 50)
-    outside_temp = weather.get("main", {}).get("temp", 20)
+    
 
     # Placeholder — you will replace this with ESP32 steps later
     steps = 5000

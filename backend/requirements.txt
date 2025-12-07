@@ -12,3 +12,4 @@ timm
 pandas
 numpy
 torch
+google-cloud-aiplatform
