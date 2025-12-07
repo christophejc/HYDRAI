@@ -223,22 +223,22 @@ def recommendation(db: Session = Depends(get_db)):
     weather = get_weather(lat=lat, lon=lon)
 
     # 3. Generate LLM Personalized Response
-    llm_advice = generate_llm_response(
+    '''llm_advice = generate_llm_response(
         label,
         step_count,
         calories,
         weather
-    )
+    )'''
     
     # 4. Send Notification via ntfy.sh
     
     # Determine priority based on risk
     priority = 5 if label == "dehydrated" else 3 
-    tags = "🚨" if label == "dehydrated" else "💧"
+    tags = "warning,alert" if label == "dehydrated" else "info,hydration"
 
     send_notification(
         title=f"HYDR-AI Alert: {label.upper()}",
-        message=llm_advice,
+        #message=llm_advice,
         priority=priority,
         tags=tags
     )
@@ -246,52 +246,6 @@ def recommendation(db: Session = Depends(get_db)):
     # 5. Return LLM Advice in the API Response
     return {
         "hydration_prediction": label,
-        "personalized_advice": llm_advice,
+        #"personalized_advice": llm_advice,
         "weather": weather
     }
-
-    humidity = weather.get("main", {}).get("humidity", 50)
-    outside_temp = weather.get("main", {}).get("temp", 20)
-
-    return {
-        "hydration_prediction": label
-    }
-
-    """
-    ##FOR OLD MODEL USING ALL DATA
-    latest = db.query(SensorData).order_by(SensorData.id.desc()).first()
-    if not latest:
-        return {"error": "No sensor data available"}
-    
-    # Use sensor lat/lon or default NYC
-    
-
-    # Placeholder — you will replace this with ESP32 steps later
-    steps = 5000
-
-    # ML prediction
-    result = predict_hydration_level(
-        hr=latest.heart_rate,
-        temp=latest.temperature,
-        gsr=latest.gsr,
-        humidity=humidity,
-        outside_temp=outside_temp,
-        steps=steps,
-    )
-
-    return {
-        "hydration_prediction": result,
-        "weather": {
-            "humidity": humidity,
-            "outside_temp": outside_temp
-        },
-        "latest_sensor": {
-            "hr": latest.heart_rate,
-            "temp": latest.temperature,
-            "gsr": latest.gsr,
-            "lat": latest.lat,
-            "lon": latest.lon
-        }
-    }
-    """
-    

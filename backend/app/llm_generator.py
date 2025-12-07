@@ -7,7 +7,7 @@ from google.cloud import aiplatform
 # The client automatically uses the Service Account credentials
 # provided by the Cloud Run environment.
 try:
-    aiplatform.init(project=os.getenv("hydr-ai"), location="us-central1")
+    aiplatform.init(project=os.getenv("GCP_PROJECT"), location="us-central1")
 except Exception as e:
     print(f"Vertex AI initialization failed (running locally?): {e}")
 
@@ -39,7 +39,7 @@ def generate_llm_response(hydration_label: str, steps: int, calories: float, wea
     )
 
     try:
-        model = aiplatform.get_model_registry().get_model(MODEL_NAME)
+        model = aiplatform.GenerativeModel(MODEL_NAME)
         
         # Use the generate_content method
         response = model.generate_content(

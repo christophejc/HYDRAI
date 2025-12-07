@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from .routes import router
 from .database import Base, engine
+from dotenv import load_dotenv
+
+load_dotenv() # This loads the variables from the local .env file
 
 # Create all tables in the database (if not already created)
 Base.metadata.create_all(bind=engine)
