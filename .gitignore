@@ -1,4 +1,4 @@
 .env
 __pycache__/
 *.pyc
-.pth
+normwear_last_checkpoint-15470-correct.pth
