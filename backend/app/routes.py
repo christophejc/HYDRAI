@@ -146,7 +146,7 @@ def receive_apple_health(data: dict, db: Session = Depends(get_db)):
 
 
 @router.get("/recommendation")
-def recommendation(db: Session = Depends(get_db)):
+async def recommendation(db: Session = Depends(get_db)):
     
     # Fetch all sensor data
     sensor_rows = db.query(SensorData).all()
@@ -182,7 +182,7 @@ def recommendation(db: Session = Depends(get_db)):
 
     # 2. Randomly sample 150 rows
     # We use random_state=42 for reproducibility of the random sample.
-    df_sampled = processed_df.sample(n=150, random_state=42)
+    df_sampled = processed_df.head(n=150)
 
     # 3. Select the desired columns and convert to a NumPy array
     np_array = df_sampled[selection_cols].to_numpy()
@@ -229,6 +229,7 @@ def recommendation(db: Session = Depends(get_db)):
         calories,
         weather
     )'''
+    llm_advice = await generate_llm_response(label, step_count, calories, weather)
     
     # 4. Send Notification via ntfy.sh
     
@@ -238,7 +239,7 @@ def recommendation(db: Session = Depends(get_db)):
 
     send_notification(
         title=f"HYDR-AI Alert: {label.upper()}",
-        #message=llm_advice,
+        message=llm_advice,
         priority=priority,
         tags=tags
     )
@@ -246,6 +247,5 @@ def recommendation(db: Session = Depends(get_db)):
     # 5. Return LLM Advice in the API Response
     return {
         "hydration_prediction": label,
-        #"personalized_advice": llm_advice,
-        "weather": weather
+        "personalized_advice": llm_advice,
     }

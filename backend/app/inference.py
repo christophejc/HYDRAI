@@ -19,6 +19,7 @@ CURRENT_DIR = Path(__file__).parent
 
 MODEL_PATH = CURRENT_DIR / "hydration_best_model.pth"
 ENCODER_WEIGHTS = CURRENT_DIR / "normwear_last_checkpoint-15470-correct.pth"
+#ENCODER_WEIGHTS = CURRENT_DIR / "../../ml_model/normwear_last_checkpoint-15470-correct.pth"
 
 device = torch.device("cpu")
 

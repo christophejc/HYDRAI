@@ -1,61 +1,56 @@
 # app/llm_generator.py
-
 import os
-from google.cloud import aiplatform
+from dotenv import load_dotenv
+import fastapi_poe as fp
 
-# Initialize Vertex AI client
-# The client automatically uses the Service Account credentials
-# provided by the Cloud Run environment.
-try:
-    aiplatform.init(project=os.getenv("GCP_PROJECT"), location="us-central1")
-except Exception as e:
-    print(f"Vertex AI initialization failed (running locally?): {e}")
+# Load environment variables
+load_dotenv()
+POE_API_KEY = os.getenv("POE_API_KEY")
 
-# Define the model to use (e.g., Gemini 2.5 Flash)
-MODEL_NAME = "gemini-2.5-flash"
+SYSTEM_PROMPT = (
+    "You are an AI specialized in health and hydration. Your task is to provide a concise, "
+    "friendly, and actionable hydration recommendation based on the user's data. "
+    "Keep the response arouns 30 words. Be encouraging."
+)
+BOT_NAME = 'GPT-4o-Mini'
 
-def generate_llm_response(hydration_label: str, steps: int, calories: float, weather_data: dict) -> str:
+# Change the function signature to asynchronous
+async def generate_llm_response(hydration_label: str, steps: int, calories: float, weather_data: dict) -> str:
     """
-    Generates a personalized hydration recommendation using Google's Vertex AI (Gemini).
+    Generates a personalized hydration recommendation using Poe (GPT-4o-Mini).
     """
-    if not aiplatform.initializer.global_config.project:
-        return f"Prediction: {hydration_label}. LLM environment not initialized."
+    if not POE_API_KEY:
+        return f"Prediction: {hydration_label}. Poe API key not set."
 
-    # --- Construct the Prompt ---
+    # --- Construct the Prompt (Same logic as before) ---
     weather_desc = weather_data.get("description", "unknown weather conditions")
     temp_f = weather_data.get("temp_f", "N/A")
-
-    system_prompt = (
-        "You are an AI specialized in health and hydration. Your task is to provide a concise, "
-        "friendly, and actionable hydration recommendation based on the user's data. "
-        "Keep the response under 50 words. Be encouraging."
-    )
 
     user_prompt = (
         f"The user's current hydration level is classified as: '{hydration_label}'. "
         f"Recent activity: {steps} steps and {calories:.1f} active calories burned. "
         f"External conditions: {weather_desc} at {temp_f}°F. "
-        "Generate a personalized, encouraging recommendation."
+        "Generate a personalized recommendation considering weather conditions and recent activity to inform water intake."
     )
 
     try:
-        model = aiplatform.GenerativeModel(MODEL_NAME)
+        # Assemble the message list using the Poe structure
+        message = [
+            fp.ProtocolMessage(role="system", content=SYSTEM_PROMPT),
+            fp.ProtocolMessage(role="user", content=user_prompt)
+        ]
         
-        # Use the generate_content method
-        response = model.generate_content(
-            contents=[
-                {"role": "user", "parts": [{"text": user_prompt}]},
-            ],
-            system_instruction=system_prompt,
-            config=aiplatform.types.GenerateContentConfig(
-                max_output_tokens=100,
-                temperature=0.7
-            )
-        )
-        
-        llm_text = response.text.strip()
-        return llm_text
+        full_response = ""
+        # Use the asynchronous generator for the response
+        async for partial in fp.get_bot_response(
+            messages=message,
+            bot_name=BOT_NAME,
+            api_key=POE_API_KEY
+        ):
+            full_response += partial.text
+            
+        return full_response.strip()
 
     except Exception as e:
-        print(f"Gemini API Error: {e}")
+        print(f"POE API Error: {e}")
         return f"Prediction: {hydration_label}. Error generating personalized advice."

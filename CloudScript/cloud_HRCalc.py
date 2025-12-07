@@ -174,7 +174,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 }
                 
                 # 3. Save to CSV
-                log_to_csv(csv_payload)
+                #log_to_csv(csv_payload)
                 
                 # 4. Respond to ESP32
                 final_packet = {
