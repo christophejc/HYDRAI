@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Columbia University EECS E4764 IoT Project Report #0</title>
+		<title>Columbia University EECS E4764 IoT Project Report #23</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -24,11 +24,11 @@
 					<!-- Logo -->
 						<div id="logo">
 							<!-- <span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span> -->
-							<h1 id="title">Project Name</h1>
+							<h1 id="title">HYDR.AI</h1>
 							<p>Columbia University <br>
 								EECS E4764 Fall'25 <br>
 								Artificial Intelligence of Things<br>
-								Team 0 Project Report
+								Team 23 Project Report
 							</p>
 						</div>
 
@@ -82,11 +82,18 @@
 					<section id="top" class="one dark cover">
 						<div class="container">
 
-								<iframe width="560" height="315" src="https://www.youtube.com/embed/_AlcRoqS65E" frameborder="0" allowfullscreen></iframe>
+								<iframe width="560" height="315" src="https://www.youtube.com/embed/60S0ChkweOU?si=UGhOEjEqs0Hx5De_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-								<h2 class="alt">Project Name</h2>
-								<p>Project Wonderland is a blah blah blah</p>
-								<p>(Abstract here)</p>
+								<h2 class="alt">HYDR.AI</h2>
+								<p>A smart hydration band wearable that monitors heart rate, skin temperature, and skin conductance to detect early signs of dehydration and alert the user when it’s time to rehydrate.
+</p>
+								<p align = "justify">Dehydration significantly impacts cognitive performance and health, yet generic intake guidelines often fail
+									 to account for real-time biological needs. HYDR.AI is an Artificial Intelligence of Things (AIoT) wearable system designed to provide
+									  personalized hydration monitoring. The device integrates an ESP32 microcontroller with sensors for Heart Rate, Skin Temperature, and 
+									  Galvanic Skin Response (GSR) to capture real-time biosignals. This data is transmitted to a Google Cloud Run architecture where it is analyzed 
+									  alongside environmental context (weather and location) and physical activity context (daily steps and active calories) from various APIs to classify 
+									  hydration states. The system delivers timely notifications and actionable water intake recommendations to the user's device from a notification service.
+									 This ensures users stay optimally hydrated based on their specific physiological conditions.</p>
 
 
 							<footer>
@@ -103,10 +110,31 @@
 							<header>
 								<h2>Motivation</h2>
 							</header>
+							<p align="center" style="font-style: italic;">“Staying hydrated starts with knowing your body's specific needs” - Alex Germano, MD</p>
 
-							<p align="left">You can choose to use photos or figures to help</p>
+							<span class="image fit"  style="display: block; width: 60%; margin-bottom: 2em;margin-left: auto; margin-right: auto;">
+                                <img src="images/hydration_chart.png" alt="Water Intake Chart" />
+                            </span>
 
+							<h3 align="left">The Hydration Gap</h3>
+                            <p align="left">
+                                Despite the clear importance of water for health, most Americans chronically under-hydrate. 
+                                Data suggests a startling gap: on average, men consume only <strong>~5.5 cups</strong> of their 
+                                recommended 15.5 cups, while women consume just <strong>~5.4 cups</strong> against a target of 11.5 cups. 
+                                This deficit directly impacts energy, cognitive focus, and overall health.
+                            </p>
 
+                            <h3 align="left">Why HYDR.AI?</h3>
+                            <p align="left">
+                                Generic "drink water" reminders aren't enough because they ignore the individual's real-time 
+                                physiological state. Hydr.AI closes this gap by moving beyond static schedules.
+                            </p>
+                            <p align="left">
+                                We utilize an AIoT wearable to monitor real-time biosignals—specifically <strong>Heart Rate, 
+                                Skin Temperature, and Galvanic Skin Response (GSR)</strong>. By combining these physiological markers 
+                                with environmental data, our system detects early signs of dehydration to provide personalized alerts 
+                                that keep users performing at their peak.
+                            </p>
 
 						</div>
 					</section>
