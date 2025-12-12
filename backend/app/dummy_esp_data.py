@@ -28,7 +28,7 @@ def generate_dummy_ir_wave(fs=50, duration_sec=2, bpm=75):
     return ir_values
 
 def get_dummy_sensor():
-    """Return a fake RAW sensor payload matching the new expected JSON."""
+    """Return a fake RAW sensor payload matching the expected JSON. THIS WAS FOR TESTING BEFORE WE FINISHED THE PROTOTYPE/CAN BE USED FOR REPRODUCIBILITY"""
     
     # Generate fake IR samples for heart rate calculation
     ir_values = generate_dummy_ir_wave(
@@ -47,10 +47,11 @@ def get_dummy_sensor():
     }
 
 def get_dummy_history(n=10):
-    """Return a list of n fake sensor readings."""
+    """Return a list of n fake sensor readings. THIS WAS FOR TESTING BEFORE WE FINISHED THE PROTOTYPE"""
     return [get_dummy_sensor() for _ in range(n)]
 
 def get_dummy_apple():
+    """Return a fake Apple HealthKit payload. THIS WAS FOR TESTING TO MAKE SURE THE APP CAN HANDLE IT/CAN BE USED FOR REPRODUCIBILITY"""
     return {
         "data": {
             "metrics": [
