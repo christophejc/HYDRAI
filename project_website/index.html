@@ -150,14 +150,117 @@
 							<p align="left">Remember to use combination of descriptions, photos, and figures</p>
 
 							<h3 align="left">Architecture</h3>
+							<span class="image fit" style="display: block; width: 80%; margin: 0 auto 2em auto;margin-left: auto; margin-right: auto;">
+                                <img src="images/arch.jpg" alt="Architecture Chart" />
+                            </span>
 
-							<p align="left">Blah blah blah</p>
+							<p align="left">
+                                HYDR.AI operates on a robust four-stage pipeline: <strong>Data Collection, Edge Processing, Cloud Intelligence, and User Feedback.</strong> 
+                                Our system integrates custom embedded hardware with a containerized cloud backend to deliver real-time, context-aware hydration analytics.
+                            </p>
+
+                            <h4 align="left">1. Sensing Pipeline (Hardware Layer)</h4>
+                            <p align="left">
+                                The wearable device is built around an <strong>ESP32 microcontroller</strong> acting as the central hub. 
+                                To ensure high-precision data acquisition, we utilize an <strong>ADS1115 ADC</strong> (Analog-to-Digital Converter) to interface with analog biosensors. 
+                                The sensor suite includes:
+                            </p>
+                            <ul align="left" style="list-style-position: inside;">
+                                <li><strong>MAX3010:</strong> Captures photoplethysmography (PPG) data for Heart Rate variability.</li>
+                                <li><strong>GSR Sensor:</strong> Measures skin conductance (Galvanic Skin Response) to track sweat gland activity.</li>
+                                <li><strong>NTC Thermistor:</strong> Monitors real-time skin temperature.</li>
+                            </ul>
+
+                            <h4 align="left">2. Data Handling & Forwarding (Edge Layer)</h4>
+                            <p align="left">
+                                Raw sensor data is transmitted via I2C/ADC to the ESP32, which forwards the payload via HTTP POST to a local edge gateway. 
+                                A custom Python script (<code>cloud_HRCalc.py</code>) running on the gateway serves two roles:
+                            </p>
+                            <ul align="left" style="list-style-position: inside;">
+                                <li><strong>Preprocessing:</strong> Performs initial signal cleaning and raw value conversion.</li>
+                                <li><strong>Orchestration:</strong> Forwards data to our cloud container and manages the "Heartbeat" of the system by triggering the recommendation engine on a set timer.</li>
+                            </ul>
+
+                            <h4 align="left">3. Cloud Backend & Intelligence</h4>
+                            <p align="left">
+                                The core logic resides in a <strong>Dockerized FastAPI container</strong> hosted on Google Cloud Run. The backend exposes three custom endpoints:
+                            </p>
+                            <ul align="left" style="list-style-position: inside;">
+                                <li><strong>@/sensor:</strong> Ingests high-frequency biosignal data from the hardware and processes the data to get compatible values for the model.</li>
+                                <li><strong>@/apple-health:</strong> Integrates external health context (Step Count, Active Energy) via the HealthKit Auto Export API. This data orignates from an automation sync JSON in the Auto Export App linked to the users Apple Health Data</li>
+                                <li><strong>@/recommendation:</strong> The decision engine. It aggregates historical sensor trends, environmental context (fetched via <strong>OpenWeather API</strong>), and physical activity.</li>
+                            </ul>
+                            <p align="left">
+                                This aggregated sensor data is fed into our {INSERT TYPE OF MODEL, ones shot etc} ML Hydration Model to predict the user's hydration state. The prediction, combined with weather and activity data, is sent to a <strong>Large Language Model (via Poe API)</strong> to generate a natural language, actionable hydration tip.
+                            </p>
+
+                            <h4 align="left">4. User Experience (Feedback Loop)</h4>
+                            <p align="left">
+                                The final recommendation is delivered instantly to the user's smartphone via <strong>ntfy.sh</strong> (Pub/Sub notification service). 
+                                This closes the loop, providing the user with timely, scientifically grounded advice rather than generic reminders.
+                            </p>
 
 
 							<h3 align="left">Technical Components</h3>
 
-							<p align="left">Blah blah blah</p>
+                            <p align="left">
+                                Our system leverages a heterogeneous tech stack, combining low-level embedded hardware with high-level cloud microservices.
+                            </p>
 
+                            <div class="row">
+
+                                <div class="4u 12u$(mobile)">
+                                    <h4>Hardware Layer</h4>
+                                    <ul align="left" style="list-style-position: inside;">
+                                        <li><strong>MCU:</strong> ESP32 Microcontroller (Wi-Fi enabled).</li>
+                                        <li><strong>ADC:</strong> ADS1115 (16-bit precision for analog sensors).</li>
+                                        <li><strong>Sensors:</strong>
+                                            <ul>
+                                                <li>MAX3010 (PPG/Heart Rate)</li>
+                                                <li>NTC Thermistor (Skin Temp)</li>
+                                                <li>GSR Module (Skin Conductance)</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="4u 12u$(mobile)">
+                                    <h4>Software & Cloud</h4>
+                                    <ul align="left" style="list-style-position: inside;">
+                                        <li><strong>Backend:</strong> FastAPI (Python) for high-performance REST endpoints.</li>
+                                        <li><strong>Containerization:</strong> Docker & Google Cloud Run for serverless deployment.</li>
+                                        <li><strong>Database:</strong> SQLite/SQLAlchemy for sensor logging.</li>
+                                        <li><strong>Notifications:</strong> ntfy.sh (Pub/Sub service).</li>
+                                    </ul>
+                                </div>
+
+                                <div class="4u$ 12u$(mobile)">
+                                    <h4>AI & Data</h4>
+                                    <ul align="left" style="list-style-position: inside;">
+                                        <li><strong>ML Framework:</strong> PyTorch (Custom TFC-based Hydration Model).</li>
+                                        <li><strong>LLM Engine:</strong> Poe API (Context-aware natural language generation).</li>
+                                        <li><strong>External APIs:</strong>
+                                            <ul>
+                                                <li>OpenWeatherMap (Real-time weather).</li>
+                                                <li>Apple HealthKit (Activity metrics).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                    
+                                </div>
+
+                            </div>
+
+							<h4>Machine Learning Inference Engine</h4>
+                                    <p align="left"> 
+                                        The core of the predictive capabilities is powered by a custom PyTorch model trained using the <strong>NormWear</strong> methodology.
+                                    </p>
+                                    <ul align="left" style="list-style-position: inside;">
+                                        <li><strong>Architecture:</strong> The model is designed to normalize and interpret complex sensor data to infer real-time hydration levels.</li>
+                                        <li><strong>Training & Optimization:</strong> The deployed model (<code>hydration_best_model.pth</code>) represents the optimal convergence point, derived from checkpoint <em>#15470</em>. This checkpoint was selected for maximizing accuracy while maintaining generalization on unseen user data.</li>
+                                        <li><strong>Integration:</strong> The model is serialized and embedded directly into the backend container, allowing for low-latency inference on every API request without external dependencies.</li>
+                                    </ul>
 
 							<h3 align="left">Prototype</h3>
 
