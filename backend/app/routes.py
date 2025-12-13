@@ -35,9 +35,12 @@ def receive_sensor_data(data: dict, db: Session = Depends(get_db)):
     }
     """
     if not data:
-        # Use dummy sensor data if no JSON is provided
+        # Use dummy sensor data if no JSON is provided [TESTING ONLY/CAN BE USED FOR REPRODUCIBILITY]
         data = get_dummy_sensor()
         print("Using dummy sensor data:", data)
+        #ORIGINAL CODE:
+        #print("No sensor data provided. Please provide valid JSON data.")
+        #return {"error": "No sensor data provided"}
 
     ir = data.get("ir_readings", [])
     raw_temp = data.get("raw_temp", 0)
@@ -101,9 +104,12 @@ def receive_apple_health(data: dict, db: Session = Depends(get_db)):
     }
     """
     if not data:
-        # Use dummy sensor data if no JSON is provided
+        # Use dummy sensor data if no JSON is provided [TESTING ONLY/CAN BE USED FOR REPRODUCIBILITY]
         data = get_dummy_apple()
         print("Using dummy sensor data:", data)
+        #ORIGINAL CODE:
+        #print("No Apple Health data provided. Please provide valid JSON data.")
+        #return {"error": "No Apple Health data provided"}
 
     metrics = data.get("data", {}).get("metrics", [])
 
