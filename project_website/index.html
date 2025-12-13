@@ -120,7 +120,7 @@
 							</header>
 							<p align="center" style="font-style: italic;">“Staying hydrated starts with knowing your body's specific needs” - Alex Germano, MD</p>
 
-							<span class="image fit"  style="display: block; width: 60%; margin-bottom: 2em;margin-left: auto; margin-right: auto;">
+							<span class="image fit"  style="display: block; width: 80%; margin-bottom: 2em;margin-left: auto; margin-right: auto;">
                                 <img src="images/hydration_chart.png" alt="Water Intake Chart" />
                             </span>
 
@@ -135,7 +135,7 @@
                             <h3 align="left">Why HYDR.AI?</h3>
                             <p align="left">
                                 Generic "drink water" reminders aren't enough because they ignore the individual's real-time 
-                                physiological state. Hydr.AI closes this gap by moving beyond static schedules.
+                                physiological state. HYDR.AI closes this gap by moving beyond static schedules.
                             </p>
                             <p align="left">
                                 We utilize an AIoT wearable to monitor real-time biosignals—specifically <strong>Heart Rate, 
@@ -161,7 +161,7 @@
                             </span>
 
 							<p align="left">
-                                HYDR.AI operates on a robust four-stage pipeline: <strong>Data Collection, Edge Processing, Cloud Intelligence, and User Feedback.</strong> 
+                                HYDR.AI operates in a  four-stage pipeline: <strong>Data Collection, Edge Processing, Cloud Intelligence, and User Feedback.</strong> 
                                 Our system integrates custom embedded hardware with a containerized cloud backend to deliver real-time, context-aware hydration analytics.
                             </p>
 
@@ -197,7 +197,7 @@
                                 <li><strong>@/recommendation:</strong> The decision engine. It aggregates historical sensor trends, environmental context (fetched via <strong>OpenWeather API</strong>), and physical activity.</li>
                             </ul>
                             <p align="left">
-                                This aggregated sensor data is fed into our {INSERT TYPE OF MODEL, ones shot etc} ML Hydration Model to predict the user's hydration state. The prediction, combined with weather and activity data, is sent to a <strong>Large Language Model (via Poe API)</strong> to generate a natural language, actionable hydration tip.
+                                This aggregated sensor data is fed into our fine tuned Deep Learning Hydration Model to predict the user's hydration state. The prediction, combined with weather and activity data, is sent to a <strong>Large Language Model (via Poe API)</strong> to generate a natural language, actionable hydration tip.
                             </p>
 
                             <h4 align="left">4. User Experience (Feedback Loop)</h4>
@@ -271,7 +271,7 @@
 										network classifier maps these embeddings to hydration states: hydrated, mildly dehydrated, or dehydrated.
 										<div style="margin-top: 10px;">
 										<img src="images/architecture.jpg"
-											style="max-width: 100%; height: auto; border-radius: 6px;">
+											style="display: block; width: 80%; margin: 0 auto 2em auto;margin-left: auto; margin-right: auto;">
 										</div>
 									</li>
 
@@ -283,7 +283,7 @@
 										<div style="margin-top: 10px;">
 										<img src="images/test_accuracy.jpg"
 											alt="Model training and optimization process"
-											style="max-width: 100%; height: auto; border-radius: 6px;">
+											style="display: block; width: 80%; margin: 0 auto 2em auto;margin-left: auto; margin-right: auto;">
 										</div>
 									</li>
 
@@ -296,15 +296,46 @@
 
 							<h3 align="left">Prototype</h3>
 
-							<p align="left">
-							Our prototype consists of a wearable sensor setup connected to a microcontroller,
-							demonstrating real-time data collection and hydration inference.
-							</p>
+                            <p align="left">
+                                Our prototype consists of the wearable sensor setup connected to a microcontroller,
+                                demonstrating real-time data collection.The main circuit is securely housed within 
+								a wrist strap, while the sensors are fastened into the GSR cloth leads to ensure 
+								both user convenience and prolonged comfort.
+                            </p>
+
+                            
+
+                            <div class="row">
+                                <div class="6u 12u$(mobile)">
+                                    <span class="image fit">
+                                        <img src="images/circuit_image.png" alt="Circuit Diagram" style="width: 70%; display: block; margin: 0 auto; border-radius: 8px;" />
+                                    </span>
+                                </div>
+                                <div class="6u$ 12u$(mobile)">
+                                    <span class="image fit">
+                                        <img src="images/circuit_prototype.jpeg" alt="Physical Implementation" style="border-radius: 8px;" />
+                                    </span>
+                                </div>
+                            </div>
 
 							<img src="images/tech_components.jpg"
-								alt="HYDR.AI wearable prototype"
-								style="max-width:100%; height:auto; border-radius:8px; margin-top:15px;">
+                                alt="HYDR.AI wearable prototype"
+                                style="max-width:100%; height:auto; border-radius:8px; margin-top:15px; margin-bottom: 2em;">
 
+                            <p align="center" style="font-style: italic; margin-top: 0.5em; margin-bottom: 2em;">
+                                Circuit Diagram to Physical Implementation
+                            </p>
+
+                            <div class="12u$">
+                                <video width="100%" controls style="border-radius: 8px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+                                    <source src="images/prototype_vid.mov" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+
+							<p align="center" style="font-style: italic; margin-top: 0.5em; margin-bottom: 2em;">
+                                Prototype Video
+                            </p>
 
 
 						</div>
@@ -312,25 +343,69 @@
 
 
 					<section id="results" class="two">
-						<div class="container">
+                                <div class="container">
 
-							<header>
-								<h2>Results</h2>
-							</header>
+                                    <header>
+                                        <h2>Results</h2>
+                                    </header>
 
-							<p align="left">Remember to use figures to help illustrate results</p>
+                                    <p align="left">The experimental results validate the complete end-to-end data pipeline of the HYDR.AI system.
+										 As demonstrated in the Cloud Script output, the local gateway successfully aggregates real-time sensor readings
+										  from the ESP32 and transmits them to the cloud backend via the @sensor endpoint, while simultaneously triggering 
+										  the decision engine through the @recommendation route. The Google Cloud logs confirm the robust ingestion of this
+										   physiological data alongside asynchronous context updates from external Apple Health sources. This real-time processing
+										    culminates in the user notifications shown below, highlighting the system's context-awareness: the AI generates 
+											distinct, actionable advice for people with no active data (0 steps/active calories) versus a more active user, ensuring 
+											recommendations are tailored to the user's immediate physical exertion levels. </p>
 
+                                    <div class="12u$">
+                                        <article class="item">
+                                            <a href="#" class="image fit">
+                                                <img src="images/cloudscript.png" alt="Cloud Script Output" />
+                                            </a>
+                                            <header>
+                                                <h3>CLOUD SCRIPT LOG</h3>
+                                            </header>
+                                        </article>
+                                    </div>
 
-							<article class="item">
-								<a href="#" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
-								<header>
-									<h3>Caption</h3>
-								</header>
-							</article>
+                                    <div class="12u$">
+                                        <article class="item">
+                                            <a href="#" class="image fit">
+                                                <img src="images/google_log.png" alt="Google Cloud Logs" />
+                                            </a>
+                                            <header>
+                                                <h3>GOOGLE CLOUD LOG </h3>
+                                            </header>
+                                        </article>
+                                    </div>
 
+                                    <div class="row">
+                                        <div class="6u 12u$(mobile)">
+                                            <article class="item">
+                                                <a href="#" class="image fit">
+                                                    <img src="images/screenshot_inactive.jpeg" alt="Inactive Screenshot" />
+                                                </a>
+                                                <header>
+                                                    <h3>NON-ACTIVE USER NOTIFICATIONS</h3>
+                                                </header>
+                                            </article>
+                                        </div>
 
-						</div>
-					</section>
+                                        <div class="6u$ 12u$(mobile)">
+                                            <article class="item">
+                                                <a href="#" class="image fit">
+                                                    <img src="images/screenshot_active.jpeg" alt="Active Screenshot" />
+                                                </a>
+                                                <header>
+                                                    <h3>ACTIVE USER NOTIFICATIONS</h3>
+                                                </header>
+                                            </article>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </section>
 
 					<section id="references" class="three">
 						<div class="container">
@@ -376,21 +451,23 @@
 									</header>
 									</article>
 								</div>
-								<div class="4u$ 12u$(mobile)">
+								<div class="4u 12u$(mobile)">
 									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
+										<a href="#" class="image fit"><img src="images/christophe.jpeg" alt="" /></a>
 										<header>
-											<h3>Team Member</h3>
-											<p>Description and link</p>
+											<h3>Christophe Charles</h3>
+											<p>Electrical Engineering M.S. <br>
+											<a href="https://www.linkedin.com/in/christophejcharles/" target="_blank">LinkedIn</a> </p>
 										</header>
 									</article>
 								</div>
 								<div class="4u$ 12u$(mobile)">
 									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
+										<a href="#" class="image fit"><img src="images/shlok.jpeg" alt="" /></a>
 										<header>
-											<h3>Team Member</h3>
-											<p>Description and link</p>
+											<h3>Shlok Desai</h3>
+											<p>Electrical Engineering M.S.<br>
+											<a href="https://www.linkedin.com/in/shlokbdesai/" target="_blank">LinkedIn</a> </p>
 										</header>
 									</article>
 								</div>
@@ -409,8 +486,8 @@
 
 							<p align="left">
 								<strong>Lina Cheung: </strong>lc3749@columbia.edu</br>
-								<strong>Contact Name 2: </strong>email here</br>
-								<strong>Other Contact Information: </strong>other contact info</br>
+								<strong>Christophe Charles: </strong>cc5428@columbia.edu</br>
+								<strong>Shlok Desai: </strong>sbd2150@columbia.edu</br>
 							</br>
 								<strong>Columbia University </strong><a href="http://www.ee.columbia.edu">Department of Electrical Engineering</a><br>
 								<!-- <strong>Class Website:</strong>
