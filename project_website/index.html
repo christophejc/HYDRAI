@@ -82,7 +82,15 @@
 					<section id="top" class="one dark cover">
 						<div class="container">
 
-								<iframe width="560" height="315" src="https://www.youtube.com/embed/60S0ChkweOU?si=UGhOEjEqs0Hx5De_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+								<iframe
+									width="560"
+									height="315"
+									src="https://www.youtube.com/embed/60S0ChkweOU?autoplay=1&mute=1"
+									title="HYDR.AI Demo Video"
+									frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen>
+								</iframe>
 
 								<h2 class="alt">HYDR.AI</h2>
 								<p>A smart hydration band wearable that monitors heart rate, skin temperature, and skin conductance to detect early signs of dehydration and alert the user when it’s time to rehydrate.
@@ -146,8 +154,6 @@
 							<header>
 								<h2>System</h2>
 							</header>
-
-							<p align="left">Remember to use combination of descriptions, photos, and figures</p>
 
 							<h3 align="left">Architecture</h3>
 							<span class="image fit" style="display: block; width: 80%; margin: 0 auto 2em auto;margin-left: auto; margin-right: auto;">
@@ -253,18 +259,51 @@
                             </div>
 
 							<h4>Machine Learning Inference Engine</h4>
-                                    <p align="left"> 
-                                        The core of the predictive capabilities is powered by a custom PyTorch model trained using the <strong>NormWear</strong> methodology.
-                                    </p>
-                                    <ul align="left" style="list-style-position: inside;">
-                                        <li><strong>Architecture:</strong> The model is designed to normalize and interpret complex sensor data to infer real-time hydration levels.</li>
-                                        <li><strong>Training & Optimization:</strong> The deployed model (<code>hydration_best_model.pth</code>) represents the optimal convergence point, derived from checkpoint <em>#15470</em>. This checkpoint was selected for maximizing accuracy while maintaining generalization on unseen user data.</li>
-                                        <li><strong>Integration:</strong> The model is serialized and embedded directly into the backend container, allowing for low-latency inference on every API request without external dependencies.</li>
-                                    </ul>
+                                    <p align="left" style="margin-bottom: 6px;">
+										HYDR.AI uses a deep learning architecture to estimate hydration levels from wearable sensor data.
+										</p>	
+
+									<ul align="left" style="list-style-position: inside;">
+									<li style="margin-bottom: 12px;">
+										<strong>Architecture:</strong>
+										Sensor data is segmented into short time windows and processed by a pretrained NormWear encoder,
+										which converts raw biosignals into compact signal embeddings. A lightweight two-layer neural
+										network classifier maps these embeddings to hydration states: hydrated, mildly dehydrated, or dehydrated.
+										<div style="margin-top: 10px;">
+										<img src="images/architecture.jpg"
+											style="max-width: 100%; height: auto; border-radius: 6px;">
+										</div>
+									</li>
+
+									<li style="margin-bottom: 12px;">
+										<strong>Training &amp; Optimization:</strong>
+										The model is trained using labeled sensor windows and transfer learning to achieve high performance
+										with limited data. Key parameters such as window size, learning rate, and classifier depth were tuned
+										to balance classification accuracy and real-time efficiency.
+										<div style="margin-top: 10px;">
+										<img src="images/test_accuracy.jpg"
+											alt="Model training and optimization process"
+											style="max-width: 100%; height: auto; border-radius: 6px;">
+										</div>
+									</li>
+
+									<li style="margin-bottom: 12px;">
+										<strong>Integration:</strong>
+										The model is serialized and embedded directly into the backend container, allowing for low-latency
+										inference on every API request without external dependencies.
+									</li>
+									</ul>
 
 							<h3 align="left">Prototype</h3>
 
-							<p align="left">Blah blah blah</p>
+							<p align="left">
+							Our prototype consists of a wearable sensor setup connected to a microcontroller,
+							demonstrating real-time data collection and hydration inference.
+							</p>
+
+							<img src="images/tech_components.jpg"
+								alt="HYDR.AI wearable prototype"
+								style="max-width:100%; height:auto; border-radius:8px; margin-top:15px;">
 
 
 
@@ -300,7 +339,12 @@
 								<h2>References</h2>
 							</header>
 
-							<p align="left">Blah blah blah</p>
+							<p align="left">
+								Luo, Y., Chen, Y., Salekin, A., &amp; Rahman, T. (2023).
+								<em>Toward Foundation Models for Multivariate Wearable Sensing of Physiological Signals</em>.
+								Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies (IMWUT).
+							</p>
+
 
 						</div>
 					</section>
@@ -320,14 +364,19 @@
 							<div class="row">
 								<div class="4u 12u$(mobile)">
 									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
-										<header>
-											<h3>Team Member</h3>
-											<p>Description and link</p>
-										</header>
+									<a href="#" class="image fit">
+										<img src="images/lina.jpeg" alt="Lina Cheung" />
+									</a>
+									<header>
+										<h3>Lina Cheung</h3>
+										<p>
+										Biomedical Engineering M.S. <br>
+										<a href="https://www.linkedin.com/in/cheung-lina" target="_blank">LinkedIn</a>
+										</p>
+									</header>
 									</article>
 								</div>
-								<div class="4u 12u$(mobile)">
+								<div class="4u$ 12u$(mobile)">
 									<article class="item">
 										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
 										<header>
@@ -359,7 +408,7 @@
 							</header>
 
 							<p align="left">
-								<strong>Contact Name 1: </strong>email here</br>
+								<strong>Lina Cheung: </strong>lc3749@columbia.edu</br>
 								<strong>Contact Name 2: </strong>email here</br>
 								<strong>Other Contact Information: </strong>other contact info</br>
 							</br>
