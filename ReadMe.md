@@ -83,16 +83,16 @@ Open a second terminal window (PowerShell recommended for Windows) and use the f
 
 * **Insert Dummy Sensor Data:**
   ```powershell
-  curl.exe -X POST [http://127.0.0.1:8000/sensor](http://127.0.0.1:8000/sensor) -H "Content-Type: application/json" -d "{}"
+  curl.exe -X POST http://127.0.0.1:8000/sensor -H "Content-Type: application/json" -d "{}"
   ```
 * **Insert Dummy Apple-Health Data:**
   ```powershell
-  curl.exe -X POST [http://127.0.0.1:8000/apple-health](http://127.0.0.1:8000/apple-health) -H "Content-Type: application/json" -d "{}"
+  curl.exe -X POST http://127.0.0.1:8000/apple-health -H "Content-Type: application/json" -d "{}"
   ```
 * **Get Hydration Recommendation:**
   Once the data sets are populated, request a recommendation:
   ```powershell
-  curl.exe [http://127.0.0.1:8000/recommendation](http://127.0.0.1:8000/recommendation)
+  curl.exe http://127.0.0.1:8000/recommendation
   ```
 
   The terminal will receive JSON responses revealing the status and the calculated values.
@@ -101,7 +101,7 @@ Open a second terminal window (PowerShell recommended for Windows) and use the f
 If you want to test the deployed Google Cloud instance:
 
 1. Open your terminal.
-2. Run the `curl` commands mentioned above, but replace `http://127.0.0.1:8000` with your actual **Google Cloud Container URL**.
+2. Run the `curl` commands mentioned above, but replace `http://127.0.0.1:8000` with the actual **Google Cloud Container URL**: `https://hydr-ai-backend-529883695650.us-central1.run.app`.
 3. Send empty JSONs (`"{}"`) to the `@apple-health` and `@sensor` endpoints to trigger the dummy data generation.
 4. Call the `@recommendation` endpoint to verify the output.
 
