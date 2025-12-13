@@ -101,7 +101,7 @@ Open a second terminal window (PowerShell recommended for Windows) and use the f
 If you want to test the deployed Google Cloud instance:
 
 1. Open your terminal.
-2. Run the `curl` commands mentioned above, but replace `http://127.0.0.1:8000` with the actual **Google Cloud Container URL**: `https://hydr-ai-backend-529883695650.us-central1.run.app`.
+2. Run the `curl` commands mentioned above, but replace `http://127.0.0.1:8000` with the actual **Google Cloud Container URL**: `https://hydr-ai-backend-529883695650.us-central1.run.app`.(May take a few seconds on the first prompt, GCP creates a new container with a fresh database)
 3. Send empty JSONs (`"{}"`) to the `@apple-health` and `@sensor` endpoints to trigger the dummy data generation.
 4. Call the `@recommendation` endpoint to verify the output.
 
